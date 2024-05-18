@@ -1,0 +1,5 @@
+beautifulsoup4==4.12.3
+moviepy==1.0.3
+opencv_python_headless==4.9.0.80
+Pillow==10.3.0
+tqdm==4.66.4
