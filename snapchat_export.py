@@ -1,13 +1,13 @@
 import argparse
 import os
 import cv2
-import copy
 import logging
+import shutil
 from bs4 import BeautifulSoup
 from datetime import datetime
+from moviepy.editor import VideoFileClip
 from tqdm import tqdm
 from PIL import Image
-from moviepy.editor import VideoFileClip
 
 # Suppress moviepy logs
 logging.getLogger("moviepy").setLevel(logging.CRITICAL)
@@ -95,7 +95,6 @@ def combine_image_with_overlay(image_path, overlay_image_path):
     main_image.save(output_path)
     set_output_date(output_path, date)
 
-
 def parse_memories(folder_path):
                 
     overlay_paths_and_folder = []
@@ -149,8 +148,12 @@ def parse_memories(folder_path):
         # Combine the media with the overlay
         if "mp4" in main_media_path:
             if overlay_image_path is None:
-                continue
-            combine_video_with_overlay(main_media_path, overlay_image_path)
+                output_video_path = os.path.join(output_folder, os.path.basename(main_media_path))
+                shutil.copy(main_media_path, output_video_path)
+                date = extract_date_from_media_file_path(main_media_path)
+                set_output_date(output_video_path, date)
+            else:
+                combine_video_with_overlay(main_media_path, overlay_image_path)
 
         if "jpg" in main_media_path:
             combine_image_with_overlay(main_media_path, overlay_image_path)
